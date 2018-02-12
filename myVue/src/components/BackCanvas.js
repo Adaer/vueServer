@@ -1,37 +1,9 @@
-
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>前端之路</title>
-<style>
-html, body { margin: 0px; width: 100%; height: 100%; overflow: hidden; background: #000; }
-#canvas { position: absolute; width: 100%; height: 100%; }
-	footer{
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-    background: #fff;		
-	}
-	footer div{
-		height: 60px;
-		line-height: 60px;
-		text-align: center;
-	}
-	footer div a{
-		color: #333;
-	}
-</style>
-</head>
-<body>
-
-	<canvas id="canvas"></canvas>
-	<footer>
-		<div>
-			<a href="http://www.miitbeian.gov.cn/">粤ICP备17144926</a>
-		</div>
-	</footer>	
-	<script>
+/*
+*背景
+import BackCanvas from 'flarum/utils/BackCanvas';
+          <canvas id="canvas" style="width:100%,height:200px"></canvas>
+*/
+export default function BackCanvas(){
 	function project3D(x,y,z,vars){
 		var p,d;
 		x-=vars.camX;
@@ -113,12 +85,12 @@ html, body { margin: 0px; width: 100%; height: 100%; overflow: hidden; backgroun
 			vars.yaw=Math.PI+p+t;
 			vars.pitch=elevation(vars.camX,vars.camZ,vars.camY)-Math.PI/2;var t;
 			for(var i=0;i<vars.points.length;++i){
-				x=vars.points[i].x;
-				y=vars.points[i].y;
-				z=vars.points[i].z;
-				d=Math.sqrt(x*x+z*z)/1.0075;
-				t=.1/(1+d*d/5);
-				p=Math.atan2(x,z)+t;
+				let x=vars.points[i].x;
+				let y=vars.points[i].y;
+				let z=vars.points[i].z;
+				let d=Math.sqrt(x*x+z*z)/1.0075;
+				let t=.1/(1+d*d/5);
+				let p=Math.atan2(x,z)+t;
 				vars.points[i].x=Math.sin(p)*d;
 				vars.points[i].z=Math.cos(p)*d;
 				vars.points[i].y+=vars.points[i].vy*t*((Math.sqrt(vars.distributionRadius)-d)*2);
@@ -140,7 +112,7 @@ html, body { margin: 0px; width: 100%; height: 100%; overflow: hidden; backgroun
 					point=project3D(x,y-d*d/85,z,vars);
 
 					if(point.d!=-1){
-						size=1+15000/(1+point.d);
+						let size=1+15000/(1+point.d);
 						a=0.15-Math.pow(d/50,4)*0.15;
 						if(a>0){
 							vars.ctx.fillStyle=colorString(interpolateColors(rgbArray(d/26-vars.frameNo/40),[0,128,32],.5+Math.sin(d/6-vars.frameNo/8)/2));
@@ -159,7 +131,7 @@ html, body { margin: 0px; width: 100%; height: 100%; overflow: hidden; backgroun
 					d=Math.sqrt(x*x+z*z);
 					point=project3D(x,y+d*d/85,z,vars);
 					if(point.d!=-1){
-						size=1+15000/(1+point.d);
+						let size=1+15000/(1+point.d);
 						a=0.15-Math.pow(d/50,4)*0.15;
 						if(a>0){
 							vars.ctx.fillStyle=colorString(
@@ -184,15 +156,15 @@ html, body { margin: 0px; width: 100%; height: 100%; overflow: hidden; backgroun
 			drawFloor(vars);
 			var point,x,y,z,a;
 			for(var i=0;i<vars.points.length;++i){
-				x=vars.points[i].x;
-				y=vars.points[i].y;
-				z=vars.points[i].z;
-				point=project3D(x,y,z,vars);
+				let x=vars.points[i].x;
+				let y=vars.points[i].y;
+				let z=vars.points[i].z;
+				let point=project3D(x,y,z,vars);
 				if(point.d!=-1){
 					vars.points[i].dist=point.d;
-					size=1+vars.points[i].radius/(1+point.d);
-					d=Math.abs(vars.points[i].y);
-					a=.8-Math.pow(d/(vars.vortexHeight/2),1000)*.8;
+					let size=1+vars.points[i].radius/(1+point.d);
+					let d=Math.abs(vars.points[i].y);
+					let a=.8-Math.pow(d/(vars.vortexHeight/2),1000)*.8;
 					vars.ctx.globalAlpha=a>=0&&a<=1?a:0;
 					vars.ctx.fillStyle=rgb(vars.points[i].color);
 					if(point.x>-1&&point.x<vars.canvas.width&&point.y>-1&&point.y<vars.canvas.height)
@@ -203,7 +175,8 @@ html, body { margin: 0px; width: 100%; height: 100%; overflow: hidden; backgroun
 		}
 
 		function spawnParticle(vars){
-			var p,ls;pt={};
+			var p,ls;
+			let pt={};
 			p=Math.PI*2*Math.random();
 			ls=Math.sqrt(Math.random()*vars.distributionRadius);
 			pt.x=Math.sin(p)*ls;
@@ -239,8 +212,5 @@ html, body { margin: 0px; width: 100%; height: 100%; overflow: hidden; backgroun
 					process(vars);
 					draw(vars)
 		}
-		frame();
-		
-	</script>
-</body>
-</html>
+		frame();	
+}
